@@ -3,344 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSN Geografi - Iklim & Dinamika Atmosfer</title>
+    <title>Mastery OSN Geografi: Dinamika Atmosfer</title>
     
-    <!-- Tailwind CSS untuk Styling UI -->
+    <!-- Tailwind & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    
-    <!-- Library html2pdf untuk Cetak Laporan -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Library PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
+
     <style>
-        /* Base Styling */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono&display=swap');
         
-        /* Navigasi Halaman Single Page Application */
-        .page { display: none; min-height: 100vh; padding: 2rem 1rem; animation: fadeIn 0.4s ease-in-out; }
+        :root {
+            --navy: #0f172a;
+            --emerald: #10b981;
+            --slate: #1e293b;
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: var(--navy); 
+            color: #f8fafc; 
+            scroll-behavior: smooth;
+        }
+
+        .page { display: none; min-height: 100vh; animation: fadeIn 0.4s ease-out; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Input & Button Styling */
-        .input-field { width: 100%; padding: 0.75rem 1rem; margin-bottom: 1rem; background: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; color: white; outline: none; transition: border 0.3s; }
-        .input-field:focus { border-color: #10b981; }
-        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer; text-align: center; transition: all 0.2s; border: none; }
-        .btn-primary { background: #10b981; color: #0f172a; }
-        .btn-primary:hover { background: #059669; }
-        .btn-primary:disabled { background: #064e3b; color: #94a3b8; cursor: not-allowed; }
-        .btn-outline { border: 2px solid #10b981; color: #10b981; background: transparent; }
-        .btn-outline:hover { background: rgba(16, 185, 129, 0.1); }
-        
-        /* Styling Khusus Untuk PDF Report (Format Kertas Putih) */
-        #pdf-content { background-color: #ffffff; color: #000000; padding: 40px; border-radius: 8px; font-family: 'Times New Roman', Times, serif; line-height: 1.5; }
-        .pdf-header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 25px; }
-        .pdf-title { font-size: 1.5rem; font-weight: bold; margin: 0 0 5px 0; text-transform: uppercase; }
-        .pdf-subtitle { font-size: 1.1rem; margin: 0; color: #333; }
-        .student-info { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; font-size: 1.1rem; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
-        
-        .correct-text { color: #166534; font-weight: bold; }
-        .wrong-text { color: #991b1b; font-weight: bold; }
-        .pembahasan-box { background-color: #f8fafc; border-left: 4px solid #2563eb; padding: 12px 16px; margin: 10px 0 25px 0; font-size: 1rem; }
-        .source-text { font-style: italic; color: #475569; font-size: 0.9rem; display: block; margin-top: 8px; }
-        
-        /* Radio Button Styling untuk Ujian */
-        .radio-label { display: block; padding: 1rem; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.5rem; cursor: pointer; transition: background 0.2s; }
-        .radio-label:hover { background: #1e293b; }
-        input[type="radio"] { margin-right: 10px; accent-color: #10b981; transform: scale(1.2); }
+
+        .glass { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(16, 185, 129, 0.2); 
+            border-radius: 1.25rem; 
+        }
+
+        .btn-emerald {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #0f172a;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-emerald:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        /* PDF Styling - Reset ke standar dokumen putih */
+        #pdf-report { 
+            background: white; 
+            color: black; 
+            padding: 40px; 
+            font-family: 'Times New Roman', serif; 
+            line-height: 1.6;
+        }
+        .report-box { border-left: 4px solid #10b981; background: #f8fafc; padding: 15px; margin: 10px 0 25px; }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <!-- HALAMAN 1: LOGIN -->
-    <div id="page-login" class="page active">
-        <div class="max-w-md mx-auto mt-10 bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700">
-            <h1 class="text-3xl font-bold text-emerald-400 text-center mb-2">Simulasi OSN</h1>
-            <p class="text-slate-400 text-center mb-8">Bidang Geografi - Dinamika Atmosfer</p>
+    <!-- 1. LOGIN SECTION -->
+    <div id="page-login" class="page active flex items-center justify-center p-4">
+        <div class="max-w-md w-full glass p-8 text-center shadow-2xl">
+            <div class="mb-6 inline-flex p-4 bg-emerald-500/10 rounded-full">
+                <i data-lucide="layers" class="text-emerald-400 w-12 h-12"></i>
+            </div>
+            <h1 class="text-4xl font-extrabold mb-2 tracking-tight">GEO<span class="text-emerald-400">ENGINE</span></h1>
+            <p class="text-slate-400 mb-8">Sistem Pelatihan Mandiri OSN Geografi</p>
             
-            <input type="text" id="input-nama" class="input-field" placeholder="Nama Lengkap" oninput="checkForm()">
-            <input type="text" id="input-kelas" class="input-field" placeholder="Kelas (Misal: X MIPA 1)" oninput="checkForm()">
-            <input type="text" id="input-sekolah" class="input-field" placeholder="Asal Sekolah" oninput="checkForm()">
+            <div class="space-y-4 text-left">
+                <label class="text-xs font-bold text-slate-500 uppercase ml-1">Identitas Peserta</label>
+                <input type="text" id="user-name" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:border-emerald-500 transition" placeholder="Nama Lengkap">
+                <input type="text" id="user-school" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:border-emerald-500 transition" placeholder="Asal Sekolah">
+            </div>
             
-            <button id="btn-login" class="btn btn-primary w-full mt-4" disabled onclick="doLogin()">Masuk ke Dashboard</button>
+            <button onclick="initUser()" class="btn-emerald w-full mt-8 py-4 rounded-xl text-lg shadow-lg">Mulai Pelatihan</button>
         </div>
     </div>
 
-    <!-- HALAMAN 2: DASHBOARD -->
-    <div id="page-dashboard" class="page">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-8 bg-slate-800 p-6 rounded-xl border border-slate-700">
+    <!-- 2. DASHBOARD SECTION -->
+    <div id="page-dash" class="page p-6 md:p-12">
+        <div class="max-w-6xl mx-auto">
+            <header class="flex justify-between items-end mb-12">
                 <div>
-                    <p class="text-slate-400 text-sm">Selamat datang,</p>
-                    <h2 id="dash-nama" class="text-2xl font-bold text-emerald-400">Nama Siswa</h2>
-                    <p id="dash-sekolah" class="text-sm text-slate-300">Asal Sekolah</p>
+                    <h2 class="text-3xl font-bold" id="hello-user">Selamat Berjuang, Peserta</h2>
+                    <p class="text-emerald-400" id="hello-school">SMAN 3 Sukabumi</p>
                 </div>
-                <button onclick="nav('page-login')" class="text-sm text-red-400 hover:text-red-300 underline">Keluar</button>
-            </div>
+                <div class="hidden md:block text-right">
+                    <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-xs font-mono">VERSION 3.0.26</span>
+                </div>
+            </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Modul Menu -->
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 text-center transition hover:border-emerald-500">
-                    <div class="text-5xl mb-4">📚</div>
-                    <h3 class="text-xl font-bold mb-2">Modul Materi Singkat</h3>
-                    <p class="text-slate-400 mb-6 text-sm">Review cepat konsep cuaca, iklim, dan dinamika atmosfer.</p>
-                    <button onclick="nav('page-materi')" class="btn btn-outline w-full">Baca Modul</button>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div onclick="openMateri(0)" class="glass p-8 cursor-pointer hover:bg-slate-800/50 transition border-b-4 border-emerald-500">
+                    <i data-lucide="book-open" class="text-emerald-400 mb-4 w-10 h-10"></i>
+                    <h3 class="text-xl font-bold mb-3">Modul Teori (30 Hal)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Materi mendalam berbasis literatur Ahrens, Holton, dan IPCC.</p>
                 </div>
-                <!-- Ujian Menu -->
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 text-center transition hover:border-emerald-500">
-                    <div class="text-5xl mb-4">✍️</div>
-                    <h3 class="text-xl font-bold mb-2">Simulasi Ujian</h3>
-                    <p class="text-slate-400 mb-6 text-sm">Uji pemahamanmu. Tersedia evaluasi dan pembahasan format PDF di akhir.</p>
-                    <button onclick="nav('page-ujian')" class="btn btn-primary w-full">Mulai Ujian</button>
+                <div onclick="nav('page-lab')" class="glass p-8 cursor-pointer hover:bg-slate-800/50 transition border-b-4 border-blue-500">
+                    <i data-lucide="flask-conical" class="text-blue-400 mb-4 w-10 h-10"></i>
+                    <h3 class="text-xl font-bold mb-3">Lab Virtual</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Kalkulator parameter meteorologi dan stabilitas atmosfer.</p>
+                </div>
+                <div onclick="startExam()" class="glass p-8 cursor-pointer hover:bg-slate-800/50 transition border-b-4 border-purple-500">
+                    <i data-lucide="award" class="text-purple-400 mb-4 w-10 h-10"></i>
+                    <h3 class="text-xl font-bold mb-3">Tryout OSN</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Ujian simulasi dengan analisis jawaban format PDF.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- HALAMAN 3: MATERI SINGKAT -->
-    <div id="page-materi" class="page">
-        <div class="max-w-3xl mx-auto bg-slate-800 p-8 rounded-xl border border-slate-700">
-            <h2 class="text-2xl font-bold text-emerald-400 mb-4">Intisari Dinamika Atmosfer</h2>
-            <div class="space-y-4 text-slate-300">
-                <p><strong>1. Lapse Rate:</strong> Penurunan suhu terhadap ketinggian. Ingat, Dry Adiabatic Lapse Rate (DALR) bersifat konstan pada angka ~9.8°C/km, sementara Saturated Adiabatic Lapse Rate (SALR) bervariasi antara 4-7°C/km karena adanya pelepasan panas laten dari kondensasi.</p>
-                <p><strong>2. Gaya Coriolis:</strong> Gaya semu akibat rotasi Bumi. Nilainya maksimal di Kutub dan bernilai NOL di Ekuator. Inilah alasan mengapa siklon tropis tidak pernah terbentuk tepat di garis khatulistiwa (0°).</p>
-                <p><strong>3. Sirkulasi Walker & ENSO:</strong> Sirkulasi zonal (barat-timur) di ekuator Pasifik. Saat fase El Nino, sirkulasi ini melemah atau berbalik, menyebabkan subsidensi (penurunan massa udara) di wilayah Indonesia yang memicu kemarau panjang.</p>
+    <!-- 3. MATERI SECTION (30 PAGES) -->
+    <div id="page-materi" class="page p-6 md:p-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <button onclick="nav('page-dash')" class="flex items-center text-slate-400 hover:text-emerald-400 transition">
+                    <i data-lucide="arrow-left" class="mr-2 w-5 h-5"></i> Dashboard
+                </button>
+                <div id="materi-count" class="font-mono bg-slate-800 px-4 py-1 rounded-full text-emerald-400 text-sm">Hal 1 / 30</div>
             </div>
-            <div class="mt-8">
-                <button onclick="nav('page-dashboard')" class="btn btn-outline">← Kembali ke Dashboard</button>
+
+            <div id="materi-body" class="glass p-10 min-h-[500px] mb-8 leading-relaxed shadow-xl">
+                <!-- Content injected here -->
+            </div>
+
+            <div class="flex justify-between gap-4">
+                <button id="btn-prev" onclick="moveMateri(-1)" class="flex-1 bg-slate-800 py-4 rounded-xl font-bold hover:bg-slate-700 transition disabled:opacity-20">Sebelumnya</button>
+                <button id="btn-next" onclick="moveMateri(1)" class="flex-1 bg-emerald-600 py-4 rounded-xl font-bold hover:bg-emerald-500 transition text-slate-900">Berikutnya</button>
             </div>
         </div>
     </div>
 
-    <!-- HALAMAN 4: UJIAN -->
-    <div id="page-ujian" class="page">
+    <!-- 4. LAB SECTION -->
+    <div id="page-lab" class="page p-6 md:p-12">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="nav('page-dash')" class="mb-8 text-slate-400 hover:text-white flex items-center">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i> Kembali
+            </button>
+            <h2 class="text-3xl font-bold text-blue-400 mb-8">Simulator Termodinamika</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass p-8">
+                    <h3 class="font-bold mb-6 flex items-center"><i data-lucide="settings" class="mr-2 w-5 h-5"></i> Kontrol Input</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-2 uppercase">Suhu Permukaan (°C)</label>
+                            <input type="number" id="lab-t" value="30" class="w-full bg-slate-900 p-4 rounded-xl border border-slate-700 outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-2 uppercase">Ketinggian (mdpl)</label>
+                            <input type="number" id="lab-h" value="2500" class="w-full bg-slate-900 p-4 rounded-xl border border-slate-700 outline-none focus:border-blue-500">
+                        </div>
+                        <button onclick="runLab()" class="w-full bg-blue-600 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/20">Hitung Prediksi</button>
+                    </div>
+                </div>
+                <div class="glass p-8 flex flex-col justify-center items-center text-center">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Estimasi Suhu Adiabatik</span>
+                    <div id="res-val" class="text-7xl font-black text-blue-400 mb-4">--°C</div>
+                    <p id="res-desc" class="text-slate-400 text-sm">Masukkan data ketinggian untuk melihat penurunan suhu menggunakan standar DALR.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. EXAM SECTION -->
+    <div id="page-exam" class="page p-6 md:p-12">
         <div class="max-w-3xl mx-auto">
-            <h2 class="text-2xl font-bold text-emerald-400 mb-6">Soal Simulasi OSN</h2>
-            
-            <form id="quiz-form">
-                <!-- Soal 1 -->
-                <div class="bg-slate-800 p-6 rounded-xl mb-6 border border-slate-700">
-                    <p class="mb-4 text-lg">1. Jika parsel udara tak jenuh dipaksa naik melewati pegunungan setinggi 2000 mdpl dari permukaan laut dengan suhu awal 30°C, berapakah suhu parsel udara tersebut saat mencapai puncak? (Asumsikan DALR konstan)</p>
-                    <label class="radio-label"><input type="radio" name="q1" value="A"> A. 20.2°C</label>
-                    <label class="radio-label"><input type="radio" name="q1" value="B"> B. 10.4°C</label>
-                    <label class="radio-label"><input type="radio" name="q1" value="C"> C. 16.8°C</label>
-                    <label class="radio-label"><input type="radio" name="q1" value="D"> D. 25.1°C</label>
-                </div>
-
-                <!-- Soal 2 -->
-                <div class="bg-slate-800 p-6 rounded-xl mb-6 border border-slate-700">
-                    <p class="mb-4 text-lg">2. Fenomena El Niño memengaruhi curah hujan di kepulauan Indonesia secara signifikan. Mekanisme dinamika atmosfer utama yang menjelaskan defisit curah hujan tersebut adalah...</p>
-                    <label class="radio-label"><input type="radio" name="q2" value="A"> A. Menguatnya angin pasat timuran di Pasifik Barat</label>
-                    <label class="radio-label"><input type="radio" name="q2" value="B"> B. Penurunan tekanan udara permukaan di wilayah Samudra Hindia</label>
-                    <label class="radio-label"><input type="radio" name="q2" value="C"> C. Bergesernya sirkulasi Walker yang memicu subsidensi di atas wilayah Indonesia</label>
-                    <label class="radio-label"><input type="radio" name="q2" value="D"> D. Menguatnya angin muson barat daya</label>
-                </div>
-
-                <!-- Soal 3 -->
-                <div class="bg-slate-800 p-6 rounded-xl mb-6 border border-slate-700">
-                    <p class="mb-4 text-lg">3. Mengapa badai siklon tropis (hurricane/typhoon) sangat jarang atau hampir tidak pernah terbentuk tepat di ekuator geografis (lintang 0°)?</p>
-                    <label class="radio-label"><input type="radio" name="q3" value="A"> A. Suhu permukaan laut di ekuator terlalu dingin</label>
-                    <label class="radio-label"><input type="radio" name="q3" value="B"> B. Parameter Gaya Coriolis di ekuator bernilai nol</label>
-                    <label class="radio-label"><input type="radio" name="q3" value="C"> C. Kelembapan udara di troposfer tengah sangat rendah</label>
-                    <label class="radio-label"><input type="radio" name="q3" value="D"> D. Terjadi gesekan angin (wind shear) vertikal yang sangat kuat</label>
-                </div>
-
-                <!-- Soal 4 -->
-                <div class="bg-slate-800 p-6 rounded-xl mb-6 border border-slate-700">
-                    <p class="mb-4 text-lg">4. Gas Rumah Kaca (GRK) seperti Karbon Dioksida dan Metana menyebabkan pemanasan global melalui mekanisme utama yaitu...</p>
-                    <label class="radio-label"><input type="radio" name="q4" value="A"> A. Menyerap radiasi gelombang pendek (ultraviolet) dari matahari yang masuk ke atmosfer</label>
-                    <label class="radio-label"><input type="radio" name="q4" value="B"> B. Memantulkan kembali radiasi matahari langsung ke luar angkasa (meningkatkan albedo)</label>
-                    <label class="radio-label"><input type="radio" name="q4" value="C"> C. Menyerap radiasi gelombang panjang (inframerah) yang dipancarkan oleh permukaan Bumi</label>
-                    <label class="radio-label"><input type="radio" name="q4" value="D"> D. Merusak lapisan ozon di stratosfer sehingga panas masuk tanpa hambatan</label>
-                </div>
-            </form>
-
-            <div class="flex justify-between mt-8">
-                <button onclick="nav('page-dashboard')" class="btn btn-outline">Batal</button>
-                <button onclick="submitUjian()" class="btn btn-primary px-10">Kumpulkan & Lihat Evaluasi</button>
+            <div class="flex justify-between items-center mb-10 bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                <h2 class="text-2xl font-bold">Simulasi OSN</h2>
+                <div id="exam-timer" class="text-2xl font-mono text-red-400 font-bold">60:00</div>
             </div>
+            <div id="question-list" class="space-y-8">
+                <!-- Questions injected here -->
+            </div>
+            <button onclick="processResult()" class="w-full bg-emerald-500 text-slate-900 py-5 rounded-2xl font-black text-xl mt-12 hover:bg-emerald-400 transition shadow-xl">SUBMIT & GENERATE REPORT</button>
         </div>
     </div>
 
-    <!-- HALAMAN 5: EVALUASI & GENERATE PDF -->
-    <div id="page-evaluasi" class="page">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h2 class="text-2xl font-bold text-emerald-400">Hasil Analisis & Evaluasi</h2>
-                <div class="flex gap-3">
-                    <button onclick="nav('page-dashboard')" class="btn btn-outline text-sm">Kembali ke Menu</button>
-                    <button onclick="downloadPDF()" class="btn btn-primary text-sm flex items-center gap-2">
-                        📄 Unduh PDF Evaluasi
-                    </button>
-                </div>
+    <!-- 6. HIDDEN PDF CONTENT -->
+    <div style="display: none;">
+        <div id="pdf-report">
+            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+                <h1 style="margin:0; font-size: 24px;">REKAPITULASI EVALUASI OSN GEOGRAFI</h1>
+                <p id="pdf-header-info" style="margin:5px 0; font-size: 14px;">Nama: | Sekolah: | Skor Akhir:</p>
             </div>
-
-            <!-- KONTEN INI YANG AKAN DICETAK KE PDF -->
-            <div id="pdf-content">
-                <div class="pdf-header">
-                    <h1 class="pdf-title">LAPORAN EVALUASI SIMULASI OSN GEOGRAFI</h1>
-                    <p class="pdf-subtitle">Materi: Iklim, Cuaca, dan Dinamika Atmosfer</p>
-                </div>
-                
-                <div class="student-info">
-                    <div>
-                        Nama: <span id="pdf-nama">[Nama Siswa]</span><br>
-                        Kelas: <span id="pdf-kelas">[Kelas]</span>
-                    </div>
-                    <div style="text-align: right;">
-                        Asal Sekolah: <span id="pdf-sekolah">[Sekolah]</span><br>
-                        Skor: <span id="pdf-skor" style="color: #2563eb;">0</span> / 100
-                    </div>
-                </div>
-
-                <h3 style="font-size: 1.2rem; font-weight: bold; border-bottom: 2px solid #000; margin-top: 20px; margin-bottom: 15px; padding-bottom: 5px;">Rekapitulasi Analisis Soal</h3>
-
-                <!-- Evaluasi Soal 1 -->
-                <div>
-                    <p><strong>Soal 1:</strong> Jika parsel udara tak jenuh dipaksa naik melewati pegunungan setinggi 2000 mdpl dari permukaan laut dengan suhu awal 30°C, berapakah suhu parsel udara tersebut saat mencapai puncak?</p>
-                    <p>Jawaban Anda: <span id="ans1"></span></p>
-                    <p>Kunci Jawaban: <span class="correct-text">B. 10.4°C</span></p>
-                    <div class="pembahasan-box">
-                        <strong>Pembahasan Terstruktur:</strong><br>
-                        Parsel udara tak jenuh yang naik akan mengalami pendinginan secara adiabatik kering (Dry Adiabatic Lapse Rate / DALR). Nilai rata-rata DALR bersifat konstan, yakni 9.8°C per 1000 meter (1 km).<br>
-                        • Kenaikan elevasi (Z) = 2000 m (2 km)<br>
-                        • Total penurunan suhu (ΔT) = 2 km × 9.8°C/km = 19.6°C<br>
-                        • Suhu akhir (T akhir) = Suhu awal - ΔT = 30°C - 19.6°C = 10.4°C.<br>
-                        <span class="source-text">Sumber Literatur: Ahrens, C. D. (2012). "Meteorology Today" (10th ed.), Cengage Learning. Bab: Atmospheric Stability.</span>
-                    </div>
-                </div>
-
-                <!-- Evaluasi Soal 2 -->
-                <div>
-                    <p><strong>Soal 2:</strong> Fenomena El Niño memengaruhi curah hujan di kepulauan Indonesia secara signifikan. Mekanisme dinamika atmosfer utama yang menjelaskan defisit curah hujan tersebut adalah...</p>
-                    <p>Jawaban Anda: <span id="ans2"></span></p>
-                    <p>Kunci Jawaban: <span class="correct-text">C. Bergesernya sirkulasi Walker yang memicu subsidensi di atas wilayah Indonesia</span></p>
-                    <div class="pembahasan-box">
-                        <strong>Pembahasan Terstruktur:</strong><br>
-                        El Niño ditandai oleh melemahnya angin pasat dan memanasnya Suhu Permukaan Laut (SPL) di Pasifik Tengah/Timur. Kondisi ini menyebabkan pusat konveksi dalam (deep convection) bergeser dari Benua Maritim Indonesia ke arah timur. Akibatnya, cabang Sirkulasi Walker di atas wilayah Indonesia berubah menjadi zona subsidensi (penurunan massa udara). Udara yang turun akan memampat dan menghangat, sehingga menghambat pembentukan awan konvektif penghasil hujan.<br>
-                        <span class="source-text">Sumber Literatur: Barry, R. G., & Chorley, R. J. (2009). "Atmosphere, Weather and Climate" (9th ed.), Routledge.</span>
-                    </div>
-                </div>
-
-                <!-- Evaluasi Soal 3 -->
-                <div>
-                    <p><strong>Soal 3:</strong> Mengapa badai siklon tropis (hurricane/typhoon) sangat jarang atau hampir tidak pernah terbentuk tepat di ekuator geografis (lintang 0°)?</p>
-                    <p>Jawaban Anda: <span id="ans3"></span></p>
-                    <p>Kunci Jawaban: <span class="correct-text">B. Parameter Gaya Coriolis di ekuator bernilai nol</span></p>
-                    <div class="pembahasan-box">
-                        <strong>Pembahasan Terstruktur:</strong><br>
-                        Siklon tropis membutuhkan gaya pelintir untuk memulai rotasi sistem tekanan rendah. Gaya rotasi semu ini disebut Gaya Coriolis (f = 2Ω sin Φ), di mana Φ adalah garis lintang. Karena sin(0°) adalah nol, maka Gaya Coriolis di ekuator bernilai nol. Tanpa gaya ini, udara yang mengalir menuju pusat tekanan rendah tidak dapat berotasi membentuk pusaran siklonik, melainkan langsung mengisi pusat tekanan rendah tersebut.<br>
-                        <span class="source-text">Sumber Literatur: Holton, J. R. (2004). "An Introduction to Dynamic Meteorology" (4th ed.), Elsevier Academic Press.</span>
-                    </div>
-                </div>
-
-                <!-- Evaluasi Soal 4 -->
-                <div style="page-break-inside: avoid;">
-                    <p><strong>Soal 4:</strong> Gas Rumah Kaca (GRK) seperti Karbon Dioksida dan Metana menyebabkan pemanasan global melalui mekanisme utama yaitu...</p>
-                    <p>Jawaban Anda: <span id="ans4"></span></p>
-                    <p>Kunci Jawaban: <span class="correct-text">C. Menyerap radiasi gelombang panjang (inframerah) yang dipancarkan oleh permukaan Bumi</span></p>
-                    <div class="pembahasan-box">
-                        <strong>Pembahasan Terstruktur:</strong><br>
-                        Kesalahan umum adalah mengira GRK menahan panas matahari secara langsung atau merusak ozon. Secara fisika, atmosfer hampir transparan terhadap radiasi matahari yang masuk (gelombang pendek/shortwave). Permukaan Bumi menyerap energi ini, lalu memancarkannya kembali ke angkasa dalam bentuk energi panas (radiasi terestrial gelombang panjang/inframerah). Molekul GRK (CO2, CH4, H2O) memiliki struktur yang sangat efektif menyerap dan memancarkan kembali radiasi gelombang panjang ini, sehingga menjebak panas di troposfer bawah.<br>
-                        <span class="source-text">Sumber Literatur: IPCC (Intergovernmental Panel on Climate Change) Core Concepts.</span>
-                    </div>
-                </div>
-
-            </div>
-            <!-- AKHIR KONTEN PDF -->
-
+            <div id="pdf-body"></div>
         </div>
     </div>
 
-    <!-- LOGIKA JAVASCRIPT -->
     <script>
-        // Data Siswa
-        let userData = { nama: '', kelas: '', sekolah: '' };
+        // --- DATA MATERI (30 HALAMAN TEKNIS) ---
+        const materiData = [
+            { t: "Kompisisi Gas Atmosfer", c: "Atmosfer Bumi didominasi oleh Nitrogen (78.08%) dan Oksigen (20.95%). Namun, dalam OSN, fokus sering tertuju pada <b>Variable Gases</b> seperti Karbon Dioksida (420+ ppm) dan Metana. Gas-gas ini memiliki <i>residence time</i> yang berbeda-beda dan krusial bagi keseimbangan radiatif." },
+            { t: "Profil Vertikal & Tropopause", c: "Troposfer memiliki ketebalan bervariasi: ~18 km di ekuator dan ~8 km di kutub. Mengapa? Karena konveksi yang jauh lebih kuat di ekuator. <b>Tropopause</b> adalah batas di mana suhu berhenti turun, berfungsi sebagai 'tutup' bagi fenomena cuaca." },
+            { t: "Hukum Radiasi Wien", c: "Setiap benda memancarkan radiasi. Matahari (6000K) memancarkan gelombang pendek (maksimal pada spektrum cahaya tampak). Bumi (288K) memancarkan gelombang panjang (inframerah). Persamaannya: $$\\lambda_{max} = \\frac{2897}{T}$$." },
+            { t: "Albedo Global", c: "Albedo adalah rasio radiasi yang dipantulkan. Albedo rata-rata Bumi adalah 0.3. Salju segar memiliki albedo tertinggi (0.8-0.9), sedangkan hutan dan laut sangat rendah (0.05-0.1). Perubahan tutupan lahan secara langsung mengubah <i>net radiation</i>." },
+            { t: "Efek Rumah Kaca (ERK)", c: "ERK adalah proses ALAMI. Tanpa ERK, suhu Bumi akan mencapai -18°C. Masalah muncul karena <i>Enhanced Greenhouse Effect</i> akibat aktivitas antropogenik. Gas rumah kaca menyerap radiasi terestrial (gelombang panjang), bukan radiasi matahari langsung." },
+            { t: "Persamaan Keadaan Gas", c: "Hubungan tekanan (P), densitas ($\\rho$), dan suhu (T) dinyatakan dalam: $$P = \\rho R T$$. Di atmosfer, saat udara memuai (densitas turun) namun tekanan tetap, maka suhu harus naik, atau sebaliknya." },
+            { t: "Kesetimbangan Hidrostatik", c: "Udara tidak melayang ke luar angkasa karena gaya gravitasi seimbang dengan gaya gradien tekanan vertikal. $$dp/dz = -\\rho g$$. Ini menjelaskan mengapa tekanan udara turun secara eksponensial terhadap ketinggian." },
+            { t: "Hypsometric Equation", c: "Persamaan ini digunakan untuk menghitung ketebalan (thickness) antara dua lapisan tekanan. Lapisan udara yang hangat akan jauh lebih TEBAL daripada lapisan udara yang dingin pada tekanan yang sama." },
+            { t: "Lapse Rate Adiabatik Kering", c: "DALR bernilai konstan ~9.8°C/km. Ini adalah laju pendinginan parsel udara yang naik tanpa terjadi kondensasi. Energi kinetik molekul berkurang karena melakukan kerja ekspansi terhadap lingkungan." },
+            { t: "Saturated Adiabatic Lapse Rate", c: "SALR (4-7°C/km) lebih kecil dari DALR karena ada pelepasan <b>Panas Laten</b> saat uap air mengembun. Panas ini memanaskan parsel dari dalam, sehingga pendinginannya melambat." },
+            { t: "Titik Embun (Dew Point)", c: "Suhu di mana udara menjadi jenuh jika didinginkan pada tekanan tetap. Selisih antara suhu udara (T) dan titik embun (Td) disebut <i>dew point depression</i>. Semakin kecil selisihnya, semakin tinggi kelembapan relatifnya." },
+            { t: "Stabilitas Statis: Stabil", c: "Atmosfer dikatakan Stabil Absolut jika ELR (lingkungan) < SALR. Jika udara dipaksa naik, ia akan selalu lebih dingin dari lingkungan dan akan turun kembali ke posisi semula." },
+            { t: "Stabilitas Statis: Tidak Stabil", c: "Tidak Stabil Absolut terjadi jika ELR > DALR. Parsel udara yang sedikit naik akan menjadi lebih hangat dari lingkungan dan terus meluncur naik secara spontan (konveksi)." },
+            { t: "Kondisional Tidak Stabil", c: "Kondisi paling umum: SALR < ELR < DALR. Atmosfer stabil untuk udara kering, namun menjadi tidak stabil jika udara mencapai titik jenuh dan mulai melepaskan panas laten." },
+            { t: "Lifting Condensation Level (LCL)", c: "Ketinggian di mana parsel udara yang naik mencapai kejenuhan (RH 100%). Secara visual, ini adalah dasar dari awan-awan konvektif seperti Cumulus." },
+            { t: "Gaya Gradien Tekanan (PGF)", c: "Gaya utama penggerak angin. PGF mengalir tegak lurus isobar dari tekanan tinggi ke rendah. Besarnya berbanding lurus dengan kerapatan garis isobar pada peta cuaca." },
+            { t: "Gaya Coriolis", c: "Gaya semu akibat rotasi bumi. Menghasilkan pembelokan ke kanan di BBU dan ke kiri di BBS. Rumusnya: $$f = 2\\Omega \\sin \\phi$$. Nilainya nol di ekuator, itulah sebabnya siklon tidak bisa terbentuk di 0°." },
+            { t: "Angin Geostropik", c: "Keseimbangan ideal antara PGF dan Coriolis di atmosfer bebas (tanpa gesekan). Angin bertiup sejajar isobar. Di BBU, jika punggung kita membelakangi angin, tekanan rendah ada di sebelah kiri kita (Hukum Buys Ballot)." },
+            { t: "Gaya Gesek (Friction)", c: "Di dekat permukaan (lapisan batas), gesekan memperlambat angin. Hal ini mengurangi gaya Coriolis, sehingga PGF menang dan menyebabkan angin memotong garis isobar menuju tekanan rendah." },
+            { t: "Sirkulasi Hadley", c: "Sel sirkulasi termal di tropis. Udara naik di ITCZ (tekanan rendah ekuator) dan turun di subtropis (tekanan tinggi 30°), menciptakan zona gurun utama di dunia." },
+            { t: "Intertropical Convergence Zone", c: "Zona konvergensi angin pasat. Dicirikan oleh tekanan rendah, kelembapan tinggi, dan awan konvektif masif. ITCZ bergeser mengikuti gerak semu matahari (akibat kemiringan sumbu bumi)." },
+            { t: "Sirkulasi Walker", c: "Sirkulasi zonal (Barat-Timur) di Pasifik ekuator. Dalam kondisi normal, udara naik di Pasifik Barat (Indonesia) dan turun di Pasifik Timur. Ini menjaga Indonesia tetap basah." },
+            { t: "El Niño Southern Oscillation", c: "Saat El Niño, sirkulasi Walker melemah. Kolam panas bergeser ke tengah Pasifik. Indonesia mengalami subsidensi (udara turun) yang memicu kekeringan parah." },
+            { t: "La Niña", c: "Penguatan kondisi normal. Suhu permukaan laut di Pasifik Barat lebih panas dari biasanya, angin pasat menguat, menyebabkan curah hujan ekstrem dan risiko banjir di Indonesia." },
+            { t: "Mekanisme Monsun", c: "Perbedaan kapasitas panas antara daratan (Asia/Australia) dan samudra. Musim hujan di Indonesia terjadi saat Monsun Barat (Angin dari Asia yang kaya uap air melewati ekuator)." },
+            { t: "Indian Ocean Dipole (IOD)", c: "Fenomena mirip ENSO tapi di Samudra Hindia. IOD Positif menyebabkan kekeringan di Indonesia (suhu laut di Sumatera lebih dingin), sedangkan IOD Negatif memicu hujan lebat." },
+            { t: "Klasifikasi Iklim Köppen", c: "Sistem paling populer di OSN. Didasarkan pada vegetasi asli. Huruf utama: A (Tropis), B (Kering), C (Sedang), D (Dingin), E (Kutub). Indonesia didominasi Af, Am, dan sedikit Aw." },
+            { t: "Awan & Mikrofisika", c: "Awan terbentuk lewat proses Bergeron (kristal es) di lintang menengah/tinggi, atau proses Tumbukan-Penyatuan (collision-coalescence) di wilayah tropis yang hangat." },
+            { t: "Siklon Tropis", c: "Mesin kalor raksasa yang mengambil energi dari panas laten penguapan air laut (suhu minimal 26.5°C). Memiliki mata (pusat tenang) dan dinding mata (angin terkencang)." },
+            { t: "Perubahan Iklim & IPCC", c: "Laporan AR6 menyatakan pemanasan global sudah mencapai ~1.1°C dibanding masa pra-industri. Dampaknya nyata: kenaikan muka air laut, intensifikasi siklon, dan pergeseran zona agroklimat." }
+        ];
 
-        // Navigasi Antar Halaman
-        function nav(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
+        // --- DATA SOAL (5 CONTOH - BISA DITAMBAH HINGGA 50) ---
+        const bankSoal = [
+            { q: "Manakah gas berikut yang memiliki konsentrasi paling bervariasi secara spasial dan temporal di troposfer bawah?", o: ["Oksigen", "Nitrogen", "Uap Air", "Argon"], a: 2, p: "Uap air (H2O) sangat bervariasi (0-4%) tergantung suhu dan lokasi (tropis vs gurun), berbeda dengan gas permanen seperti N2 dan O2." },
+            { q: "Sebuah parsel udara kering naik dari 0m (30°C) ke 2000m. Berapakah suhu parsel tersebut di puncak?", o: ["20.4°C", "10.4°C", "15.2°C", "25°C"], a: 1, p: "Gunakan DALR (9.8°C/km). Penurunan = 2km * 9.8 = 19.6. Suhu akhir = 30 - 19.6 = 10.4°C." },
+            { q: "Jika ELR bernilai 5°C/km, sedangkan DALR 9.8°C/km dan SALR 6°C/km, bagaimanakah stabilitas atmosfer tersebut?", o: ["Stabil Absolut", "Tidak Stabil Absolut", "Kondisional Tidak Stabil", "Netral"], a: 0, p: "Karena ELR (5) lebih kecil dari SALR (6) dan DALR (9.8), udara yang naik akan selalu lebih dingin dari lingkungan. Ini adalah Stabil Absolut." },
+            { q: "Di manakah Gaya Coriolis bernilai nol?", o: ["Kutub Utara", "Kutub Selatan", "Ekuator", "Lintang 45 derajat"], a: 2, p: "Gaya Coriolis (f) berbanding lurus dengan sin(lintang). Sin(0) = 0, maka di ekuator tidak ada pembelokan Coriolis." },
+            { q: "Saat fenomena El Niño kuat terjadi, bagaimanakah anomali tekanan udara di Darwin (Australia) dan Tahiti?", o: ["Tahiti Rendah, Darwin Tinggi", "Tahiti Tinggi, Darwin Rendah", "Keduanya Rendah", "Keduanya Tinggi"], a: 0, p: "Indeks Osilasi Selatan (SOI) menjadi negatif saat El Niño, ditandai dengan tekanan tinggi di Darwin dan rendah di Tahiti." }
+        ];
+
+        let state = {
+            user: { name: '', school: '' },
+            currentMateri: 0,
+            examActive: false
+        };
+
+        // --- CORE FUNCTIONS ---
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+            lucide.createIcons();
+        }
+
+        function initUser() {
+            state.user.name = document.getElementById('user-name').value;
+            state.user.school = document.getElementById('user-school').value;
+            if(!state.user.name) return alert("Masukkan nama Anda");
+            
+            document.getElementById('hello-user').innerText = `Selamat Berjuang, ${state.user.name}`;
+            document.getElementById('hello-school').innerText = state.user.school;
+            nav('page-dash');
+        }
+
+        // --- MATERI LOGIC ---
+        function openMateri(idx) {
+            state.currentMateri = idx;
+            renderMateri();
+            nav('page-materi');
+        }
+
+        function renderMateri() {
+            const data = materiData[state.currentMateri];
+            document.getElementById('materi-count').innerText = `Hal ${state.currentMateri + 1} / ${materiData.length}`;
+            document.getElementById('materi-body').innerHTML = `
+                <h2 class="text-3xl font-black text-emerald-400 mb-6">${data.t}</h2>
+                <div class="text-lg text-slate-300 space-y-4">${data.c}</div>
+            `;
+            document.getElementById('btn-prev').disabled = state.currentMateri === 0;
+            document.getElementById('btn-next').innerText = state.currentMateri === materiData.length - 1 ? "Selesai" : "Berikutnya";
+        }
+
+        function moveMateri(step) {
+            state.currentMateri += step;
+            if(state.currentMateri >= materiData.length) return nav('page-dash');
+            if(state.currentMateri < 0) state.currentMateri = 0;
+            renderMateri();
+        }
+
+        // --- LAB LOGIC ---
+        function runLab() {
+            const T = parseFloat(document.getElementById('lab-t').value);
+            const H = parseFloat(document.getElementById('lab-h').value);
+            const res = T - (H/1000 * 9.8);
+            document.getElementById('res-val').innerText = res.toFixed(1) + "°C";
+            document.getElementById('res-desc').innerText = `Berdasarkan DALR, parsel udara tak jenuh yang naik ke ${H}m akan mendingin sebesar ${(H/1000 * 9.8).toFixed(1)}°C.`;
+        }
+
+        // --- EXAM LOGIC ---
+        function startExam() {
+            const list = document.getElementById('question-list');
+            list.innerHTML = bankSoal.map((s, i) => `
+                <div class="glass p-8">
+                    <p class="text-xl font-bold mb-6">${i+1}. ${s.q}</p>
+                    <div class="grid gap-3">
+                        ${s.o.map((opt, j) => `
+                            <label class="flex items-center p-4 border border-slate-700 rounded-xl cursor-pointer hover:bg-emerald-500/10 transition">
+                                <input type="radio" name="q${i}" value="${j}" class="w-5 h-5 accent-emerald-500 mr-4">
+                                <span class="text-slate-300">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            nav('page-exam');
+        }
+
+        function processResult() {
+            let score = 0;
+            let reportHTML = "";
+            
+            bankSoal.forEach((s, i) => {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
+                const correct = parseInt(selected) === s.a;
+                if(correct) score++;
+
+                reportHTML += `
+                    <div style="margin-bottom: 30px;">
+                        <p style="font-weight: bold;">Soal ${i+1}: ${s.q}</p>
+                        <p>Jawaban Anda: <span style="color: ${correct ? 'green' : 'red'}">${selected !== undefined ? s.o[selected] : 'Kosong'}</span></p>
+                        <p>Kunci Jawaban: <span style="color: green">${s.o[s.a]}</span></p>
+                        <div class="report-box">
+                            <strong>Analisis OSN:</strong> ${s.p}
+                        </div>
+                    </div>
+                `;
             });
-            document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0, 0);
-        }
 
-        // Cek Form Login agar tombol aktif
-        function checkForm() {
-            const nama = document.getElementById('input-nama').value;
-            const kelas = document.getElementById('input-kelas').value;
-            const sekolah = document.getElementById('input-sekolah').value;
-            
-            const btnLogin = document.getElementById('btn-login');
-            if (nama.trim() !== '' && kelas.trim() !== '' && sekolah.trim() !== '') {
-                btnLogin.disabled = false;
-            } else {
-                btnLogin.disabled = true;
-            }
-        }
+            const finalScore = (score / bankSoal.length) * 100;
+            document.getElementById('pdf-header-info').innerText = `Nama: ${state.user.name} | Sekolah: ${state.user.school} | Skor Akhir: ${finalScore.toFixed(0)}`;
+            document.getElementById('pdf-body').innerHTML = reportHTML;
 
-        // Eksekusi Login
-        function doLogin() {
-            userData.nama = document.getElementById('input-nama').value;
-            userData.kelas = document.getElementById('input-kelas').value;
-            userData.sekolah = document.getElementById('input-sekolah').value;
-
-            // Set data di Dashboard
-            document.getElementById('dash-nama').innerText = userData.nama;
-            document.getElementById('dash-sekolah').innerText = userData.sekolah;
-
-            // Set data untuk PDF nantinya
-            document.getElementById('pdf-nama').innerText = userData.nama;
-            document.getElementById('pdf-kelas').innerText = userData.kelas;
-            document.getElementById('pdf-sekolah').innerText = userData.sekolah;
-
-            nav('page-dashboard');
-        }
-
-        // Eksekusi Kumpul Ujian & Hitung Nilai
-        function submitUjian() {
-            // Kunci Jawaban
-            const key = { q1: 'B', q2: 'C', q3: 'B', q4: 'C' };
-            let correctCount = 0;
-
-            // Loop untuk mengecek setiap jawaban
-            for (let i = 1; i <= 4; i++) {
-                const qName = 'q' + i;
-                const userAnswer = document.querySelector(`input[name="${qName}"]:checked`)?.value || "Tidak Dijawab";
-                
-                const spanAns = document.getElementById('ans' + i);
-                spanAns.innerText = userAnswer;
-                
-                if (userAnswer === key[qName]) {
-                    spanAns.className = 'correct-text';
-                    correctCount++;
-                } else {
-                    spanAns.className = 'wrong-text';
-                }
-            }
-
-            // Hitung Skor (Skala 100)
-            const skor = (correctCount / 4) * 100;
-            document.getElementById('pdf-skor').innerText = skor;
-
-            nav('page-evaluasi');
-        }
-
-        // Eksekusi Generate PDF
-        function downloadPDF() {
-            const element = document.getElementById('pdf-content');
-            
-            // Konfigurasi Kertas A4 & Kualitas
+            // Generate PDF
+            const element = document.getElementById('pdf-report');
             const opt = {
-                margin:       15,
-                filename:     `Evaluasi_OSN_${userData.nama.replace(/\s+/g, '_')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                margin: 10,
+                filename: `Evaluasi_OSN_${state.user.name}.pdf`,
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-
-            // Jalankan html2pdf
             html2pdf().set(opt).from(element).save();
+
+            alert(`Ujian Selesai! Skor: ${finalScore}. PDF Evaluasi sedang diunduh.`);
+            nav('page-dash');
         }
+
+        // Initialize Icons
+        lucide.createIcons();
     </script>
 </body>
 </html>
